@@ -92,13 +92,11 @@
   :hnuid "xena"
   :bio "Creator of Anubis.  Technical educator, conference speaker and Twitch streamer.")
 
- (:name ""
-  :site ""
-  :blog ""
-  :feed ""
-  :about ""
-  :now ""
-  :hnuid ""
-  :bio "")
+  (:name "Joseph Szymborski"
+  :site "https://jszym.com/"
+  :feed "https://jszym.com/https://jszym.com/index.xml"
+  :about "https://jszym.com/about/"
+  :hnuid "jszymborski"
+  :bio "Computational Biology Researcher. Writes technical posts and essays about society.")
 
  (:end))
