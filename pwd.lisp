@@ -133,6 +133,12 @@
   :about "https://www.seangoedecke.com/about"
   :bio "Writes about AI and large-company dynamics.")
 
+ (:name "Sebastiaan Vermeulen"
+  :site "https://vqi.io/"
+  :blog "https://vqi.io/blog/"
+  :hnuid "sebasv_"
+  :bio "Data scientist and open source contributor.  Writes about solving problems.")
+
  (:name "Simon Willison"
   :site "https://simonwillison.net/"
   :feed "https://simonwillison.net/atom/everything/"
@@ -164,7 +170,7 @@
   :site "https://tonyalicea.dev/"
   :feed "https://tonyalicea.dev/feed/feed.xml"
   :hnuid "TonyAlicea10"
-  :bio "Udemy and Pluralsight author, conference speaker.  Writes about AI, dev, and UX.")
+  :bio "Udemy and Pluralsight author, conference speaker.  Writes about AI, dev and UX.")
 
  (:name "Xe Iaso"
   :site "https://xeiaso.net/"
@@ -172,12 +178,6 @@
   :feed "https://xeiaso.net/blog.rss"
   :hnuid "xena"
   :bio "Creator of Anubis.  Technical educator, conference speaker and Twitch streamer.")
-
- (:name "Sebastiaan Vermeulen"
-  :site "https://vqi.io/"
-  :blog "https://vqi.io/blog/"
-  :hnuid "sebasv_"
-  :bio "Data Scientist, Open Source contributor. Writes about solving problems.")
 
  (:name ""
   :site ""
