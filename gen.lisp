@@ -3,6 +3,14 @@
 
 (require "uiop")
 
+
+;;; General Definitions
+;;; -------------------
+
+(defun fstr (fmt &rest args)
+  "Format string using specified format and arguments."
+  (apply #'format nil fmt args))
+
 (defun write-file (filename text)
   "Write text to file and close the file."
   (with-open-file (f filename :direction :output :if-exists :supersede)
@@ -12,62 +20,10 @@
   "Read Lisp file."
   (with-open-file (f filename) (read f)))
 
-(defun read-entries ()
-  "Read website entries from the data file."
-  (remove-if
-   (lambda (item)
-     (or (equal item '(:end))
-         (string= (getf item :site) "")))
-   (read-list "pwd.lisp")))
-
-(defun err (message &rest args)
-  "Print an error message and exit."
-  (format *error-output* "ERROR: ")
-  (apply #'format *error-output* message args)
-  (terpri *error-output*)
-  (uiop:quit 1))
-
 (defun has-duplicates-p (items)
   "Check if there are duplicates in the given items."
   (< (length (remove-duplicates items :test #'equal))
      (length items)))
-
-(defun validate-name-order (items)
-  "Check that entries are arranged in the order of names."
-  (let ((prev-name)
-        (curr-name))
-    (dolist (item items)
-      (setf curr-name (getf item :name))
-      (when (and prev-name (string< curr-name prev-name))
-        (err "~a: Entries must be sorted alphabetically by name" curr-name))
-      (setf prev-name curr-name))))
-
-(defun validate-bio-text (items)
-  "Check that bio entries look good."
-  (dolist (item items)
-    (let ((bio (getf item :bio))
-          (max-len 80))
-      (when bio
-        (when (> (length bio) max-len)
-          (err "~a: Bio of length ~a exceeds maximum allowed length ~a"
-               (getf item :name) (length bio) max-len))
-        (when (position #\& bio)
-          (err "~a: Bio must not contain ampersand (&)" (getf item :name)))
-        (when (char/= (char bio (1- (length bio))) #\.)
-          (err "~a: Bio must end with a full stop (period)" (getf item :name)))
-        (when (search ", and" bio)
-          (err "~a: Bio must not contain comma before 'and' (avoid Oxford comma)"
-               (getf item :name)))))))
-
-(defun validate-unique-urls (items)
-  "Check that there are no duplicates in the URLs within the same entry."
-  (dolist (item items)
-    (when (has-duplicates-p (remove nil (list (getf item :site)
-                                              (getf item :blog)
-                                              (getf item :feed)
-                                              (getf item :about)
-                                              (getf item :now))))
-      (err "~a: Entry must not have duplicate URLs" (getf item :name)))))
 
 (defun weekday-name (weekday-index)
   "Given an index, return the corresponding day of week."
@@ -86,6 +42,77 @@
     (format nil "~a, ~2,'0d ~a ~4,'0d ~2,'0d:~2,'0d:~2,'0d UTC"
             (weekday-name day) date (month-name month) year
             hour minute second)))
+
+
+;;; Validations
+;;; -----------
+
+(defun validate-name-order (items)
+  "Check that entries are arranged in the order of names."
+  (let ((prev-name)
+        (curr-name)
+        (errors))
+    (dolist (item items)
+      (setf curr-name (getf item :name))
+      (when (and prev-name (string< curr-name prev-name))
+        (push (fstr "~a: Entries must be sorted alphabetically by name" curr-name) errors))
+      (setf prev-name curr-name))
+    (reverse errors)))
+
+(defun validate-bio-text (items)
+  "Check that bio entries look good."
+  (let ((max-len 80)
+        (bio)
+        (errors))
+    (dolist (item items)
+      (when (setf bio (getf item :bio))
+        (when (> (length bio) max-len)
+          (push (fstr "~a: Bio of length ~a exceeds maximum allowed length ~a"
+                      (getf item :name) (length bio) max-len) errors))
+        (when (position #\& bio)
+          (push (fstr "~a: Bio must not contain ampersand (&)"
+                      (getf item :name)) errors))
+        (when (char/= (char bio (1- (length bio))) #\.)
+          (push (fstr "~a: Bio must end with a full stop (period)"
+                      (getf item :name)) errors))
+        (when (search ", and" bio)
+          (push (fstr "~a: Bio must not contain comma before 'and' (avoid Oxford comma)"
+                      (getf item :name)) errors))))
+    (reverse errors)))
+
+(defun validate-unique-urls (items)
+  "Check that there are no duplicates in the URLs within the same entry."
+  (let ((errors))
+    (dolist (item items)
+      (when (has-duplicates-p (remove nil (list (getf item :site)
+                                                (getf item :blog)
+                                                (getf item :feed)
+                                                (getf item :about)
+                                                (getf item :now))))
+        (push (fstr "~a: Entry must not have duplicate URLs"
+                    (getf item :name)) errors)))
+    (reverse errors)))
+
+(defun validate (items)
+  (let ((errors (append (validate-name-order items)
+                        (validate-bio-text items)
+                        (validate-unique-urls items))))
+    (when (consp errors)
+      (loop for error in errors
+            do (format *error-output* "ERROR: ~a~%" error))
+      (uiop:quit 1))))
+
+
+;;; Tool Definitions
+;;; ----------------
+
+(defun read-entries ()
+  "Read website entries from the data file."
+  (remove-if
+   (lambda (item)
+     (or (equal item '(:end))
+         (string= (getf item :site) "")))
+   (read-list "pwd.lisp")))
 
 (defun make-opml-outline (item)
   "Create an outline element for the specified website entry."
@@ -209,9 +236,7 @@
 (defun main ()
   "Create artefacts."
   (let ((entries (read-entries)))
-    (validate-name-order entries)
-    (validate-unique-urls entries)
-    (validate-bio-text entries)
+    (validate entries)
     (write-file "pwd.opml" (make-opml entries))
     (write-file "index.html" (make-html entries))))
 
