@@ -61,7 +61,9 @@ creating a pull request, please follow these guidelines:
 
  2. Ensure that the bio text does not exceed 80 characters.
 
- 3. If certain information is not available or should not be included,
+ 3. Ensure that the bio ends with a full stop (period).
+
+ 4. If certain information is not available or should not be included,
     remove the corresponding property entirely.  For example, if no
     'about' link exists, delete the entire `:about` line from the
     entry.

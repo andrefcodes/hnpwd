@@ -41,8 +41,15 @@
     (let ((bio (getf item :bio))
           (max-len 80))
       (when (and bio (> (length bio) max-len))
-        (err "~a: Bio of length ~a exceeds ~a characters"
+        (err "~a: Bio of length ~a exceeds ~a"
              (getf item :name) (length bio) max-len)))))
+
+(defun validate-bio-stop (items)
+  "Check that bio entries end with a full stop."
+  (dolist (item items)
+    (let ((bio (getf item :bio)))
+      (when (and bio (char/= (char bio (1- (length bio))) #\.))
+        (err "~a: Bio does not end with a full stop" (getf item :name))))))
 
 (defun weekday-name (weekday-index)
   "Given an index, return the corresponding day of week."
@@ -185,6 +192,7 @@
   (let ((entries (read-entries)))
     (validate-name-order entries)
     (validate-bio-length entries)
+    (validate-bio-stop entries)
     (write-file "pwd.opml" (make-opml entries))
     (write-file "index.html" (make-html entries))))
 
