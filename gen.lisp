@@ -48,6 +48,15 @@
           (weekday-name day) date (month-name month) year
           hour minute second)))
 
+(defun parse-host (url)
+  "Extract the domain name from the given URL."
+  (let* ((host-start (+ (search "://" url) 3))
+         (host-end (position #\/ url :start host-start))
+         (host (subseq url host-start host-end)))
+    (when (string-starts-with-p "www." host)
+      (setf host (subseq host 4)))
+    host))
+
 
 ;;; Validations
 ;;; -----------
@@ -60,7 +69,8 @@
     (dolist (item items)
       (setf curr-name (getf item :name))
       (when (and prev-name (string< curr-name prev-name))
-        (push (fstr "~a: Entries must be sorted alphabetically by name" curr-name) errors))
+        (push (fstr "~a / ~a: Entries must be sorted alphabetically by name"
+                    prev-name curr-name) errors))
       (setf prev-name curr-name))
     (reverse errors)))
 
@@ -85,21 +95,46 @@
                       (getf item :name)) errors))))
     (reverse errors)))
 
+(defun pick-urls (item)
+  "Pick all URL values from the given entry."
+  (remove nil (list (getf item :site)
+                    (getf item :blog)
+                    (getf item :feed)
+                    (getf item :about)
+                    (getf item :now))))
+
+(defun validate-urls (items)
+  "Check that root URLs have a trailing slash."
+  (let ((errors))
+    (dolist (item items)
+      (dolist (url (pick-urls item))
+        (when (< (count #\/ url) 3)
+          (push (fstr "~a <~a>: URL must have at least three slashes"
+                      (getf item :name) url) errors))))
+    errors))
+
 (defun validate-unique-urls (items)
   "Check that there are no duplicates in the URLs within the same entry."
   (let ((errors))
     (dolist (item items)
-      (when (has-duplicates-p (remove nil (list (getf item :site)
-                                                (getf item :blog)
-                                                (getf item :feed)
-                                                (getf item :about)
-                                                (getf item :now))))
+      (when (has-duplicates-p (remove nil (pick-urls item)))
         (push (fstr "~a: Entry must not have duplicate URLs"
                     (getf item :name)) errors)))
     (reverse errors)))
 
 (defun validate-hn-uids (items)
   "Check that HN user IDs are not links."
+  ;; Quoting HN registration error due to invalid characters:
+  ;;
+  ;; "Usernames can only contain letters, digits, dashes and
+  ;; underscores, and must be between 2 and 15 characters long. Please
+  ;; choose another."
+  ;;
+  ;; While we don't care about performing a strict check of HN
+  ;; usernames (a human reviewer will do that by actually visiting the
+  ;; HN user profile before approving a new entry), we do want to give
+  ;; users immediate feedback during CI checks when they inadvertently
+  ;; enter HN profile URL instead of their HN username.
   (let ((errors))
     (dolist (item items)
       (when (or (position #\: (getf item :hnuid))
@@ -111,6 +146,7 @@
 (defun validate (items)
   (let ((errors (append (validate-name-order items)
                         (validate-bio-texts items)
+                        (validate-urls items)
                         (validate-unique-urls items)
                         (validate-hn-uids items))))
     (when (consp errors)
@@ -154,7 +190,7 @@
     (format s "  <head>~%")
     (format s "    <title>HN Personal Websites</title>~%")
     (format s "    <dateCreated>~a</dateCreated>~%"
-            (format-date (encode-universal-time 0 0 0 14 1 2025 0)))
+            (format-date (encode-universal-time 0 0 0 14 1 2026 0)))
     (format s "    <dateModified>~a</dateModified>~%"
             (format-date (get-universal-time)))
     (format s "  </head>~%")
@@ -166,15 +202,6 @@
     (format s "    </outline>~%")
     (format s "  </body>~%")
     (format s "</opml>~%")))
-
-(defun parse-host (url)
-  "Extract the domain name from the given URL."
-  (let* ((host-start (+ (search "://" url) 3))
-         (host-end (position #\/ url :start host-start))
-         (host (subseq url host-start host-end)))
-    (when (string-starts-with-p "www." host)
-      (setf host (subseq host 4)))
-    host))
 
 (defun make-site-link (url)
   (fstr "<a href=\"~a\">~a</a>" url (parse-host url)))
@@ -254,6 +281,9 @@
     (format s "  </body>~%")
     (format s "</html>~%")))
 
+(defvar *main-mode* t
+  "Run main function iff T.  Should be set to NIL in tests.")
+
 (defun main ()
   "Create artefacts."
   (let ((entries (read-entries)))
@@ -261,4 +291,5 @@
     (write-file "pwd.opml" (make-opml entries))
     (write-file "index.html" (make-html entries))))
 
-(main)
+(when *main-mode*
+  (main))

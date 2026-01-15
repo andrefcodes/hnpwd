@@ -1,7 +1,13 @@
-all: gen lint
+all: test gen tidy
+
+test:
+	sbcl --noinform --eval "(defvar *quit* t)" --load test.lisp --quit
 
 gen:
 	sbcl --noinform --load gen.lisp --quit
+
+tidy:
+	tidy -q -e index.html
 
 loop:
 	while true; do make gen; sleep 5; done
@@ -29,6 +35,3 @@ push:
 	git push gh --tags
 	git push cb main
 	git push cb --tags
-
-lint:
-	tidy -q -e index.html

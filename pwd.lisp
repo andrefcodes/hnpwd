@@ -63,7 +63,7 @@
   :bio "Writes about AI product development, model-adjacent systems and technology.")
 
  (:name "Bboysoul"
-  :site "https://www.bboy.app"
+  :site "https://www.bboy.app/"
   :feed "https://www.bboy.app/atom.xml"
   :about "https://www.bboy.app/about.html"
   :hnuid "bboysoul"
@@ -99,7 +99,7 @@
   :bio "Palm-OS game dev.  Ramblings about retro-tech and other nostalgia.")
 
  (:name "Charles Wang"
-  :site "https://charleszw.com"
+  :site "https://charleszw.com/"
   :blog "https://charleszw.com/posts"
   :hnuid "charleszw"
   :bio "Engineer, pixel pushing and bridge carving. Computer graphics and game engines.")
@@ -120,7 +120,7 @@
   :bio "Building mental models around programming, finance and other topics.")
 
  (:name "Dennis Silin"
-  :site "https://marscalendar.space"
+  :site "https://marscalendar.space/"
   :about "https://marscalendar.space/about.html"
   :hnuid "d_silin"
   :bio "Space researcher and software developer.")
@@ -146,7 +146,7 @@
   :bio "Recovering C programmer with many interests.")
 
  (:name "Ian Reppel"
-  :site "https://ianreppel.org"
+  :site "https://ianreppel.org/"
   :feed "https://ianreppel.org/feed.xml"
   :about "https://ianreppel.org/about"
   :hnuid "i7l"
@@ -242,14 +242,14 @@
   :bio "Writes about software.  On the Haskell Foundation Board of Directors.")
 
  (:name "Lawrence Gimenez"
-  :site "https://law.gmnz.xyz"
+  :site "https://law.gmnz.xyz/"
   :blog "https://law.gmnz.xyz/blog/"
   :feed "https://law.gmnz.xyz/feed"
   :hnuid "lawgimenez"
   :bio "Mobile developer.  Writes both work and personal stuff.")
 
  (:name "Matt Crampton"
-  :site "https://www.mattcrampton.com"
+  :site "https://www.mattcrampton.com/"
   :feed "https://www.mattcrampton.com/feed.xml"
   :hnuid "revicon"
   :bio "Writes about software development, startups, camping and beards.")
@@ -375,7 +375,7 @@
   :bio "Udemy and Pluralsight author, conference speaker.  Writes about AI, dev and UX.")
 
  (:name "WillAbides"
-  :site "https://willabides.com"
+  :site "https://willabides.com/"
   :feed "https://willabides.com/index.xml"
   :hnuid "WillAbides"
   :bio "A gopher who occasionally writes about Go.")
