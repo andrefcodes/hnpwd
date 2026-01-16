@@ -13,7 +13,7 @@ jobs:
       - run: sudo apt-get install sbcl
       - run: sbcl --script gen.lisp
       - run: git add index.html pwd.opml
-      - run: git config user.name 'Continous Deployment'
+      - run: git config user.name 'Continuous Deployment'
       - run: git config user.email 'cd@localhost'
       - run: git commit -m 'Regenerate index.html and pwd.opml'
       - run: git checkout -b pages
