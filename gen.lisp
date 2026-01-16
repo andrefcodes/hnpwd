@@ -304,7 +304,7 @@
     (format s "        <a href=\"https://web.libera.chat/#hnpwd\">IRC</a>~%")
     (format s "      </nav>~%")
     (format s "      <p>~%")
-    (format s "        This website is not affiliated with Y Combinator.~%")
+    (format s "        This website is not affiliated with Y&nbsp;Combinator.~%")
     (format s "        This is a community-maintained directory of~%")
     (format s "        personal websites by active members of the HN community.~%")
     (format s "      </p>~%")
