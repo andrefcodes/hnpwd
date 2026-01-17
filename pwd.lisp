@@ -439,7 +439,7 @@
   :blog "https://priyatham.in/en/post"
   :feed "https://priyatham.in/en/post/index.xml"
   :hnuid "vasquezempereur"
-  :bio "Tech Lead and a hobbyist self-hoster")
+  :bio "Tech Lead and a hobbyist self-hoster.")
 
  (:name "Rhys Johns"
   :site "https://spikepuppet.io/"
