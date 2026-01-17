@@ -374,6 +374,14 @@
   :hnuid "msephton"
   :bio "Game and App developer | GOTY 2023 | ex-Apple.")
 
+ (:name "Matt Shams"
+  :site "https://mattshams.com/"
+  :blog "https://mattshams.com/writings"
+  :feed "https://mattshams.com/api/rss"
+  :about "https://mattshams.com/about/"
+  :hnuid "noobdabber"
+  :bio "AI researcher on human healthspan extension.")
+
  (:name "Matteo"
   :site "https://xnacly.me/"
   :blog "https://xnacly.me/posts/"
