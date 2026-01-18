@@ -65,6 +65,13 @@
   :hnuid "wttr"
   :bio "An IT sales/project manager turned web developer.")
 
+ (:name "Aman Kumar"
+  :site "https://amankumar.ai/"
+  :about "https://amankumar.ai/about"
+  :blog "https://amankumar.ai/blogs"
+  :hnuid "onlyoneaman"
+  :bio "Full-stack AI engineer.  Turns fuzzy ideas into live products quickly.")
+
  (:name "Andrew Montalenti"
   :site "https://amontalenti.com/"
   :feed "https://amontalenti.com/feed"
